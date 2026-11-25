@@ -191,10 +191,6 @@
 
     <header>
         <h1>App Spring Boot</h1>
-        <div class="estado">
-            <span class="punto" id="puntoEstado"></span>
-            <span id="textoEstado">Revisando conexión...</span>
-        </div>
     </header>
 
     <main>
@@ -225,8 +221,6 @@
         </section>
     </main>
 
-    <footer>Hecho con 💜 · Spring Boot + MySQL + Nginx</footer>
-
     <script>
         const API_URL = "/api";
 
@@ -244,7 +238,6 @@
 
         async function revisarConexion() {
             const punto = document.getElementById("puntoEstado");
-            const texto = document.getElementById("textoEstado");
             try {
                 await pedir("/hello");
                 punto.className = "punto ok";

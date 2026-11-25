@@ -45,3 +45,36 @@ jobs:
           docker compose pull backend || exit /b 1
           docker compose up -d backend || exit /b 1
           docker ps
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend_test
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Construir imagen Docker del frontend
+        run: docker build -t mfarfantique/frontend-html:latest .
+
+      - name: Publicar imagen del frontend en Docker Hub
+        run: docker push mfarfantique/frontend-html:latest
+
+  deploy-frontend:
+    needs: build-frontend
+    runs-on: self-hosted
+    steps:
+      - name: Desplegar frontend en mi máquina
+        shell: cmd
+        run: |
+          cd /d "C:\Users\NATALIA FARFAN\Downloads\proyecto_docker_compose_limpio (1)\proyecto_docker_compose_limpio"
+          docker compose pull frontend || exit /b 1
+          docker compose up -d --no-deps frontend || exit /b 1
+          docker ps
