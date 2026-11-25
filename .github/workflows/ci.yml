@@ -33,3 +33,15 @@ jobs:
 
       - name: Publicar imagen en Docker Hub
         run: docker push mfarfantique/backend-spring:latest
+
+  deploy-backend:
+    needs: build-backend
+    runs-on: self-hosted
+    steps:
+      - name: Desplegar backend en mi máquina
+        shell: cmd
+        run: |
+          cd /d "C:\Users\NATALIA FARFAN\Downloads\proyecto_docker_compose_limpio (1)\proyecto_docker_compose_limpio"
+          docker compose pull backend || exit /b 1
+          docker compose up -d backend || exit /b 1
+          docker ps

@@ -2,74 +2,314 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Frontend Spring Boot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi App Spring Boot</title>
+    <style>
+        :root {
+            --rosa: #ffd6e0;
+            --rosa-fuerte: #f4a7bb;
+            --lila: #e3d5f7;
+            --lila-fuerte: #b79ce6;
+            --menta: #c9f2e3;
+            --menta-fuerte: #7fd3b4;
+            --durazno: #ffe5cc;
+            --durazno-fuerte: #f7b77e;
+            --cielo: #d4ecfb;
+            --texto: #4a4458;
+            --texto-suave: #8a8399;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+            color: var(--texto);
+            background: linear-gradient(135deg, var(--rosa) 0%, var(--lila) 50%, var(--cielo) 100%);
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 2.2rem;
+        }
+
+        header p {
+            margin: 0;
+            color: var(--texto-suave);
+        }
+
+        .estado {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .punto {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+        .punto.ok { background: var(--menta-fuerte); }
+        .punto.error { background: var(--rosa-fuerte); }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .tarjeta {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(120, 100, 160, 0.12);
+        }
+
+        .tarjeta.saludo { --color: var(--rosa-fuerte); --fondo: var(--rosa); }
+        .tarjeta.suma   { --color: var(--menta-fuerte); --fondo: var(--menta); }
+        .tarjeta.lista  { --color: var(--lila-fuerte); --fondo: var(--lila); grid-column: 1 / -1; }
+
+        .tarjeta h2 {
+            margin: 0 0 6px;
+            font-size: 1.25rem;
+        }
+
+        .tarjeta .desc {
+            margin: 0 0 16px;
+            color: var(--texto-suave);
+            font-size: 0.9rem;
+        }
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--texto);
+            background: var(--fondo);
+            cursor: pointer;
+            transition: transform 0.1s, filter 0.2s;
+        }
+        button:hover { filter: brightness(0.95); }
+        button:active { transform: scale(0.97); }
+        button:disabled { opacity: 0.6; cursor: wait; }
+
+        .fila {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 90px;
+            padding: 10px 12px;
+            border: 2px solid var(--fondo);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--texto);
+            outline: none;
+        }
+        input:focus { border-color: var(--color); }
+
+        .resultado {
+            margin-top: 16px;
+            padding: 12px 14px;
+            min-height: 46px;
+            border-radius: 12px;
+            background: var(--fondo);
+            font-weight: 500;
+        }
+        .resultado:empty { display: none; }
+        .resultado.error { background: #ffe0e0; color: #b04a5a; }
+
+        .items {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .items li {
+            padding: 14px;
+            border-radius: 14px;
+            background: var(--durazno);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .items li:nth-child(4n+2) { background: var(--menta); }
+        .items li:nth-child(4n+3) { background: var(--cielo); }
+        .items li:nth-child(4n+4) { background: var(--rosa); }
+
+        .items .id {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .vacio {
+            margin-top: 16px;
+            color: var(--texto-suave);
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 36px;
+            color: var(--texto-suave);
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Consumo API Spring Boot v2</h1>
+    <header>
+        <h1>App Spring Boot</h1>
+        <div class="estado">
+            <span class="punto" id="puntoEstado"></span>
+            <span id="textoEstado">Revisando conexión...</span>
+        </div>
+    </header>
 
-    <h2>Saludar</h2>
-    <button onclick="saludar()">Probar /saludar</button>
-    <p id="resultadoSaludo"></p>
+    <main>
+        <section class="tarjeta saludo">
+            <h2>Saludar</h2>
+            <p class="desc">Llama al endpoint <code>/saludar</code></p>
+            <button onclick="saludar(this)">Saludar</button>
+            <div class="resultado" id="resultadoSaludo"></div>
+        </section>
 
-    <h2>Sumar dos números</h2>
-    <input type="number" id="numero1" placeholder="Número 1">
-    <input type="number" id="numero2" placeholder="Número 2">
-    <button onclick="sumar()">Sumar</button>
-    <p id="resultadoSuma"></p>
+        <section class="tarjeta suma">
+            <h2>Sumar</h2>
+            <p class="desc">Suma dos números con <code>/sumar</code></p>
+            <form class="fila" onsubmit="sumar(event)">
+                <input type="number" id="numero1" placeholder="Número 1" required>
+                <input type="number" id="numero2" placeholder="Número 2" required>
+                <button type="submit">Sumar</button>
+            </form>
+            <div class="resultado" id="resultadoSuma"></div>
+        </section>
 
-    <h2>Lista desde base de datos</h2>
-    <button onclick="listar()">Consultar /lista</button>
-    <ul id="listaDatos"></ul>
+        <section class="tarjeta lista">
+            <h2>Datos de la base de datos</h2>
+            <p class="desc">Registros de la tabla <code>prueba</code> vía <code>/lista</code></p>
+            <button onclick="listar(this)">Cargar lista</button>
+            <ul class="items" id="listaDatos"></ul>
+            <div class="resultado" id="errorLista"></div>
+        </section>
+    </main>
+
+    <footer>Hecho con 💜 · Spring Boot + MySQL + Nginx</footer>
 
     <script>
         const API_URL = "/api";
 
-        function saludar() {
-            fetch(`${API_URL}/saludar`)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById("resultadoSaludo").innerText = data;
-                })
-                .catch(error => {
-                    document.getElementById("resultadoSaludo").innerText = "Error al consumir /saludar";
-                    console.error(error);
-                });
+        async function pedir(ruta) {
+            const respuesta = await fetch(`${API_URL}${ruta}`);
+            if (!respuesta.ok) throw new Error(`Error ${respuesta.status}`);
+            return respuesta;
         }
 
-        function sumar() {
-            const numero1 = document.getElementById("numero1").value;
-            const numero2 = document.getElementById("numero2").value;
-
-            fetch(`${API_URL}/sumar?numero1=${numero1}&numero2=${numero2}`)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById("resultadoSuma").innerText = "Resultado: " + data;
-                })
-                .catch(error => {
-                    document.getElementById("resultadoSuma").innerText = "Error al consumir /sumar";
-                    console.error(error);
-                });
+        function mostrar(id, texto, esError = false) {
+            const el = document.getElementById(id);
+            el.textContent = texto;
+            el.classList.toggle("error", esError);
         }
 
-        function listar() {
-            fetch(`${API_URL}/lista`)
-                .then(response => response.json())
-                .then(data => {
-                    const lista = document.getElementById("listaDatos");
-                    lista.innerHTML = "";
-
-                    data.forEach(item => {
-                        const li = document.createElement("li");
-                        li.textContent = JSON.stringify(item);
-                        lista.appendChild(li);
-                    });
-                })
-                .catch(error => {
-                    console.error(error);
-                    document.getElementById("listaDatos").innerHTML = "<li>Error al consumir /lista</li>";
-                });
+        async function revisarConexion() {
+            const punto = document.getElementById("puntoEstado");
+            const texto = document.getElementById("textoEstado");
+            try {
+                await pedir("/hello");
+                punto.className = "punto ok";
+                texto.textContent = "Backend conectado";
+            } catch (e) {
+                punto.className = "punto error";
+                texto.textContent = "Backend no disponible";
+            }
         }
+
+        async function saludar(boton) {
+            boton.disabled = true;
+            try {
+                const r = await pedir("/saludar");
+                mostrar("resultadoSaludo", await r.text());
+            } catch (e) {
+                mostrar("resultadoSaludo", "No se pudo saludar 😢 (" + e.message + ")", true);
+            } finally {
+                boton.disabled = false;
+            }
+        }
+
+        async function sumar(evento) {
+            evento.preventDefault();
+            const n1 = document.getElementById("numero1").value;
+            const n2 = document.getElementById("numero2").value;
+            const params = new URLSearchParams({ numero1: n1, numero2: n2 });
+            try {
+                const r = await pedir(`/sumar?${params}`);
+                mostrar("resultadoSuma", `${n1} + ${n2} = ${await r.text()}`);
+            } catch (e) {
+                mostrar("resultadoSuma", "No se pudo sumar 😢 (usa números enteros)", true);
+            }
+        }
+
+        async function listar(boton) {
+            const lista = document.getElementById("listaDatos");
+            boton.disabled = true;
+            mostrar("errorLista", "");
+            lista.innerHTML = "";
+            try {
+                const r = await pedir("/lista");
+                const datos = await r.json();
+                if (datos.length === 0) {
+                    lista.innerHTML = '<p class="vacio">No hay registros todavía.</p>';
+                    return;
+                }
+                datos.forEach(item => {
+                    const li = document.createElement("li");
+                    const id = document.createElement("span");
+                    id.className = "id";
+                    id.textContent = item.pruId;
+                    const desc = document.createElement("span");
+                    desc.textContent = item.pruDesc;
+                    li.append(id, desc);
+                    lista.appendChild(li);
+                });
+            } catch (e) {
+                mostrar("errorLista", "No se pudo cargar la lista 😢 (" + e.message + ")", true);
+            } finally {
+                boton.disabled = false;
+            }
+        }
+
+        revisarConexion();
     </script>
 
 </body>

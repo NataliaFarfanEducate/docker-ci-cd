@@ -37,6 +37,8 @@ services:
     container_name: frontend_html
     ports:
       - "8081:80"
+    volumes:
+      - ./frontend_test/index.html:/usr/share/nginx/html/index.html:ro
     depends_on:
       - backend
     networks:
