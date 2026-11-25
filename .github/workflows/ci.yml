@@ -17,7 +17,10 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      
+  
+
+      - name: Construir imagen Docker
+        run: docker build -t backend-spring .
 
       - name: Compilar proyecto
         run: mvn clean package -DskipTests
