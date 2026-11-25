@@ -203,11 +203,10 @@
 
         <section class="tarjeta suma">
             <h2>Sumar</h2>
-            <p class="desc">Suma tres números con <code>/sumar</code></p>
+            <p class="desc">Suma dos números con <code>/sumar</code></p>
             <form class="fila" onsubmit="sumar(event)">
                 <input type="number" id="numero1" placeholder="Número 1" required>
                 <input type="number" id="numero2" placeholder="Número 2" required>
-                <input type="number" id="numero3" placeholder="Número 3" required>
                 <button type="submit">Sumar</button>
             </form>
             <div class="resultado" id="resultadoSuma"></div>
@@ -255,7 +254,7 @@
                 const r = await pedir("/saludar");
                 mostrar("resultadoSaludo", await r.text());
             } catch (e) {
-                mostrar("resultadoSaludo", "No se pudo saludar (" + e.message + ")", true);
+                mostrar("resultadoSaludo", "No se pudo saludar 😢 (" + e.message + ")", true);
             } finally {
                 boton.disabled = false;
             }
@@ -265,13 +264,12 @@
             evento.preventDefault();
             const n1 = document.getElementById("numero1").value;
             const n2 = document.getElementById("numero2").value;
-            const n3 = document.getElementById("numero3").value;
-            const params = new URLSearchParams({ numero1: n1, numero2: n2, numero3:n3 });
+            const params = new URLSearchParams({ numero1: n1, numero2: n2 });
             try {
                 const r = await pedir(`/sumar?${params}`);
-                mostrar("resultadoSuma", `${n1} + ${n2} + ${n3} = ${await r.text()}`);
+                mostrar("resultadoSuma", `${n1} + ${n2} = ${await r.text()}`);
             } catch (e) {
-                mostrar("resultadoSuma", "No se pudo sumar)", true);
+                mostrar("resultadoSuma", "No se pudo sumar 😢 (usa números enteros)", true);
             }
         }
 
@@ -298,7 +296,7 @@
                     lista.appendChild(li);
                 });
             } catch (e) {
-                mostrar("errorLista", "No se pudo cargar la lista(" + e.message + ")", true);
+                mostrar("errorLista", "No se pudo cargar la lista 😢 (" + e.message + ")", true);
             } finally {
                 boton.disabled = false;
             }
