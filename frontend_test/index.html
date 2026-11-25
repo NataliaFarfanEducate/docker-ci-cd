@@ -197,6 +197,7 @@
         <section class="tarjeta saludo">
             <h2>Saludar</h2>
             <p class="desc">Llama al endpoint <code>/saludar</code></p>
+            <input type="text" placeholder="Nombre" required>
             <button onclick="saludar(this)">Saludar</button>
             <div class="resultado" id="resultadoSaludo"></div>
         </section>
@@ -254,7 +255,7 @@
                 const r = await pedir("/saludar");
                 mostrar("resultadoSaludo", await r.text());
             } catch (e) {
-                mostrar("resultadoSaludo", "No se pudo saludar 😢 (" + e.message + ")", true);
+                mostrar("resultadoSaludo", "No se pudo saludar  (" + e.message + ")", true);
             } finally {
                 boton.disabled = false;
             }

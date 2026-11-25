@@ -24,8 +24,8 @@ public class testController {
 	}
 	
 	@GetMapping(value="/saludar")
-	public String saludar() {
-		return "Hola estudiantes de la 15A y 15B";
+	public String saludar(String nombre) {
+		return "Hola " + nombre;
 	}
 	
 	@GetMapping(value="/sumar")
@@ -45,6 +45,11 @@ public class testController {
 	public String hello() {
 		return "Hello estudiantes de la 16A ";
 	}
-	
+	@GetMapping(value="/impar")
+    public boolean impar(
+            @RequestParam int num) {
+
+        return num % 2 !=0;
+    }
 
 }
