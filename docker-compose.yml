@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: jbejarano10/backend-spring:latest
+    image: mfarfantique/backend-spring:latest
     container_name: backend-spring
     ports:
       - "8091:8080"
@@ -33,7 +33,7 @@ services:
       - red-data
     
   frontend:
-    image: jbejarano10/frontend-html:latest # Antes: build: ./frontend_test
+    image: mfarfantique/frontend-html:latest # Antes: build: ./frontend_test
     container_name: frontend_html
     ports:
       - "8081:80"
