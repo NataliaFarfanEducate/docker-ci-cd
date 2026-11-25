@@ -46,9 +46,5 @@ public class testController {
 		return "Hello estudiantes de la 16A ";
 	}
 	
-	@GetMapping(value="/holi")
-	public String holi() {
-		return "holi";
-	}
 
 }
